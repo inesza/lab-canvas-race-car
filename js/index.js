@@ -7,13 +7,7 @@ let frames = null;
 const ctx = canvas.getContext("2d");
 
 const backgroundImage = new Background("./images/road.png");
-const car = new Car(
-  "./images/car.png",
-  canvas.width / 2 - 26,
-  canvas.height - 120,
-  52,
-  106
-);
+const car = new Car("./images/car.png", canvas.width / 2 - 26, canvas.height - 120, 52, 106);
 const obstacles = [];
 let score = 0;
 
@@ -78,22 +72,21 @@ document.addEventListener("keyup", (e) => {
 function updateObstacles() {
   frames++;
   if (frames % 150 === 0) {
+    // Randomly generate random width for obstacle
     let y = canvas.height;
     let width = Math.floor(Math.random() * (330 - 70 + 1) + 70);
 
-    let positions = [0, canvas.width - width];
-    let random = Math.random();
-    if (random < 0.5) {
-      random = 0;
-    } else {
-      random = 1;
-    }
-    let x = positions[random];
-    obstacles.push(new Obstacle(x, 0, width, 20));
+    // Randomly place obstacle on left or  right side
+    let positionX;
+    (Math.random() < 0.5) ? positionX = 0 : positionX = canvas.width - width;
+
+    // Create obstacle
+    obstacles.push(new Obstacle(positionX, 0, width, 20));
   }
   for (let i = 0; i < obstacles.length; i++) {
     obstacles[i].y += 2;
     obstacles[i].update();
+    // Remove older obstacles to avoid crowding obstacles arrow
     if (obstacles.length > 10) {
       obstacles.shift();
     }
@@ -102,14 +95,15 @@ function updateObstacles() {
 
 // Game Over
 function gameOver() {
+  // Check for collisions
   const crashed = obstacles.some(function (obstacle) {
     return car.crashWith(obstacle);
   });
   if (crashed) {
     cancelAnimationFrame(frames);
-    let finalScoreBox = document
-      .getElementById("template")
-      .content.cloneNode(true);
+
+    // Display final score box with restart button
+    let finalScoreBox = document.getElementById("template").content.cloneNode(true);
     document.getElementById("game-board").append(finalScoreBox);
     document.getElementById("final-score").innerHTML = `${score} points`;
     document.getElementById("replay").addEventListener("click", replay);
@@ -118,7 +112,6 @@ function gameOver() {
 
 function replay() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  
   score = 0;
   while (obstacles.length > 0) {
     obstacles.pop();
