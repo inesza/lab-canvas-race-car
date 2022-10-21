@@ -1,3 +1,6 @@
+* {
+  font-family: Arial, Helvetica, sans-serif;
+}
 body {
   padding: 0;
   text-align: center;
@@ -35,4 +38,36 @@ body button {
 #game-board {
     float: left;
     padding: 20px 0px;
+    position: relative;
+}
+
+.score {
+  position: absolute;
+  top: 20px;
+  left: 70px;
+  padding : 12px;
+  color: white;
+}
+
+#game-over {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  bottom: 60px;
+  right: 40px;
+  width: 376px;
+  height: 245px;
+  background: black;
+  color: white;
+  text-align: center;
+}
+
+#game-over h2 {
+  color: #ab020b;
+  font-size: 2em;
+}
+
+#game-over #final-score {
+  font-size: 2em;
 }
